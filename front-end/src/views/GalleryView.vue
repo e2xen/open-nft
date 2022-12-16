@@ -4,13 +4,13 @@ import NftCard from "@/components/nft/NftCard";
 import NftList from "@/components/nft/NftList";
 import Web3 from "web3";
 import {ABI_CONTRACT} from "@/const";
-import Loader from "@/components/utils/Loader";
+import PageLoader from "@/components/utils/PageLoader";
 import axios from "axios";
 
 export default {
   name: 'GalleryView',
   components: {
-    Loader,
+    PageLoader,
     NftCard,
     NftList,
     Nav,
@@ -130,7 +130,7 @@ export default {
         <NftList class="mb-5" v-if="!loading && searchQuery.length === 0" :nfts="nfts" v-bind:selling-mode="true"/>
         <NftList class="mb-5" v-else-if="!loading && searchQuery.length > 0" :nfts="nftsFiltered"
                  v-bind:selling-mode="true"/>
-        <Loader v-else/>
+        <PageLoader v-else/>
       </div>
     </div>
   </div>

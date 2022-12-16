@@ -3,9 +3,11 @@ import Moralis from "moralis";
 import {v4 as uuidv4} from 'uuid';
 import Web3 from "web3";
 import {ABI_CONTRACT} from "@/const";
+import NftLoader from "@/components/nft/NftLoader";
 
 export default {
   name: 'MintNftView',
+  components: {NftLoader},
   props: {},
   data() {
     return {
@@ -17,13 +19,18 @@ export default {
       },
       file: null,
       provider: null,
-      contract: null
+      contract: null,
+      loadingInProcess: false
     }
   },
   async created() {
-    await Moralis.start({
-      apiKey: process.env.VUE_APP_MORALIS_API_KEY,
-    })
+    try {
+      await Moralis.start({
+        apiKey: process.env.VUE_APP_MORALIS_API_KEY,
+      })
+    } catch (e) {
+      console.log(e)
+    }
 
     if (window.ethereum) {
       window.ethereum.request({method: 'eth_requestAccounts'}).then(() => {
@@ -46,10 +53,12 @@ export default {
       }
     },
     submitForm() {
+      this.loadingInProcess = true
       const reader = new FileReader()
       reader.readAsBinaryString(this.file)
-      reader.onload = (e) => {
-        this.uploadImgToIpfs(e.target.result)
+      reader.onload = async (e) => {
+        await this.uploadImgToIpfs(e.target.result)
+        this.loadingInProcess = false
       }
     },
     async uploadImgToIpfs(imgBinary) {
@@ -98,7 +107,6 @@ export default {
         } else {
           alert('Metamask account not found')
         }
-
       } else {
         alert('Uploaded to IPFS, but contract not found')
       }
@@ -165,6 +173,8 @@ export default {
         </div>
       </div>
     </div>
+
+    <NftLoader v-if="loadingInProcess"/>
   </div>
 </template>
 

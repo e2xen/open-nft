@@ -1,9 +1,11 @@
 <script>
 import Web3 from "web3";
 import {ABI_CONTRACT, ABI_USDC_CONTRACT} from "@/const";
+import NftLoader from "@/components/nft/NftLoader";
 
 export default {
   name: 'NftCard',
+  components: {NftLoader},
   props: {
     id: {
       type: String,
@@ -51,11 +53,13 @@ export default {
     return {
       provider: null,
       contract: null,
-      usdcContract: null
+      usdcContract: null,
+      transactionInProcess: false
     }
   },
   methods: {
     async burn() {
+      this.transactionInProcess = true
       const account = await this.getAccount()
 
       if (account) {
@@ -63,6 +67,8 @@ export default {
         console.log(res)
         alert('Successfully burned NFT!')
       }
+
+      this.transactionInProcess = false
     },
     async getAccount() {
       const accounts = await ethereum.request({method: 'eth_accounts'})
@@ -75,18 +81,22 @@ export default {
       }
     },
     async buyEth() {
+      this.transactionInProcess = true
       const account = await this.getAccount()
 
       const resp = await this.contract.methods.buyEth(this.id).send({from: account, value: this.prices.eth})
       alert('Congrats! Now you become the owner :)')
+      this.transactionInProcess = false
     },
     async buyUsdc() {
+      this.transactionInProcess = true
       const account = await this.getAccount()
 
       const respApprove = await this.usdcContract.methods.approve(process.env.VUE_APP_WEB3_CONTRACT_ADDRESS, this.prices.usdc)
           .send({from: account})
       const resp = await this.contract.methods.buyUSDC(this.id).send({from: account})
       alert('Congrats! Now you become the owner :)')
+      this.transactionInProcess = false
     }
   }
 }
@@ -128,6 +138,8 @@ export default {
         </button>
       </div>
     </div>
+
+    <NftLoader v-if="transactionInProcess" />
   </div>
 </template>
 

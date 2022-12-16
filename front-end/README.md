@@ -29,10 +29,28 @@ npm install
 npm run serve
 ```
 
+Then, your frontend application will be available in your browser: [http://localhost:8080/](http://localhost:8080/).
+
 #### Compiles and minifies for production
 ```
 npm run build
 ```
+
+#### Alternatively, you may run the app in Docker
+1. Navigate to `./front-end`
+```bash
+cd ./front-end
+```
+2. Build Docker image
+```bash
+docker build -t open-nft . 
+```
+3. Run built image
+```bash
+docker run -p 8080:8080 open-nft
+```
+
+Then, your frontend application will be available in your browser: [http://localhost:8080/](http://localhost:8080/).
 
 ### Technology Stack
 

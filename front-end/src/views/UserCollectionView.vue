@@ -3,12 +3,12 @@ import NftList from "@/components/nft/NftList";
 import Web3 from "web3";
 import {ABI_CONTRACT} from "@/const";
 import axios from "axios";
-import Loader from "@/components/utils/Loader";
+import PageLoader from "@/components/utils/PageLoader";
 
 export default {
   name: 'UserCollectionView',
   components: {
-    Loader,
+    PageLoader,
     NftList,
   },
   async created() {
@@ -105,8 +105,8 @@ export default {
           </div>
         </div>
 
-        <NftList v-if="!loading" :nfts="nfts"/>
-        <Loader v-else/>
+        <NftList class="mb-5" v-if="!loading" :nfts="nfts"/>
+        <PageLoader v-else/>
       </div>
     </div>
   </div>
